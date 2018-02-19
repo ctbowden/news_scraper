@@ -54,19 +54,16 @@ app.get("/", function(req, res) {
 // Route for Scraping
 app.get('/scrape', function(req, res) {
   // First, grab the body of the html with request
-  request('https://news.ycombinator.com', function(error, response, html) {
+  request('http://www.nytimes.com', function(error, response, html) {
     // Then, load html into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(html);  
-    $('span.comhead').each(function(i, element){
+    $('h2.story-heading').each(function(i, element){
       var result = {};
       // Select the previous element
-      var a = $(this).prev();
-      // Get the rank by parsing the element two levels above the "a" element
-      result.rank = a.parent().parent().text();
-      // Parse the link title
-      result.title = a.text();
-      // Parse the href attribute from the "a" element
-      result.url = a.attr('href');
+      result.title = $(element).children().text();
+      result.link = $(element).children().attr("href");
+      // result.summary = $(element).next().next().next().children().text();
+      
 
       db.Article.create(result)
         .then(function(dbArticle) {

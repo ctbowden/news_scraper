@@ -20,10 +20,10 @@ var ArticleSchema = new Schema({
   },
   
   // Summary of Article
-  summary: {
-    type: String,
-    required: true
-  },
+  // summary: {
+  //   type: String,
+  //   required: true
+  // },
 
   // Create a relation with the Comment model
   comments: [{
