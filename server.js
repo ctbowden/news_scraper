@@ -62,8 +62,8 @@ app.get('/scrape', function(req, res) {
       // Select the previous element
       result.title = $(element).children().text();
       result.link = $(element).children().attr("href");
-      // result.summary = $(element).next().next().next().children().text();
-      
+      result.byline = $(element).parent().find(".byline").text();
+      result.summary = $(element).parent().find(".summary").text();
 
       db.Article.create(result)
         .then(function(dbArticle) {

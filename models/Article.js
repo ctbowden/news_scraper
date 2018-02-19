@@ -19,11 +19,17 @@ var ArticleSchema = new Schema({
     required: true
   },
   
+  // Byline of Article
+  byline: {
+    type: String,
+    required: false
+  },
+
   // Summary of Article
-  // summary: {
-  //   type: String,
-  //   required: true
-  // },
+  summary: {
+    type: String,
+    required: false
+  },
 
   // Create a relation with the Comment model
   comments: [{
