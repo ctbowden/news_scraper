@@ -38,6 +38,18 @@ mongoose.connect("mongodb://localhost/mongoScraper");
 
 // Routes
 
+app.get("/", function(req, res) {
+  db.Article.find({})
+  .then(function(dbArticle){
+    var hbsObject = {
+      articles: dbArticle
+    };
+    res.render("index", hbsObject);
+  })
+  .catch(function(err){
+    res.json(err);
+  })
+});
 
 // Route for Scraping
 app.get('/scrape', function(req, res) {
