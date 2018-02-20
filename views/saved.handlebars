@@ -6,7 +6,6 @@
     <ul class="nav navbar-nav">
       <li class="active"><a href="/">Home</a></li>
       <li><a href="/saved">Saved Articles</a></li>
-      <li><a href="/scrape" class="btn btn-danger scrape-new">SCRAPE NEW ARTICLES!</a></li>
     </ul>
   </div>
 </nav>
@@ -16,16 +15,16 @@
   <div class="background-image">
   </div>
   <div class="caption">
-    <h1>Mongo News Scraper</h1>
+    <h1>Saved Articles</h1>
     <p>From the NyTimes</p>
   </div>
 </div>
 <div class="container-fluid article-container">
     <ul class="list-group">
         {{#each articles}}
-          {{#unless saved}}
-            {{> articles/articles-block }}
-          {{/unless}}
+          {{#if saved}}
+            {{> articles/saved-articles-block }}
+          {{/if}}
         {{/each}}
     </ul>
 </div>

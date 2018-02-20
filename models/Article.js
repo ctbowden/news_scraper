@@ -30,6 +30,11 @@ var ArticleSchema = new Schema({
     type: String,
     required: false
   },
+  
+  saved: {
+    type: Boolean,
+    default: false
+  },
 
   // Create a relation with the Comment model
   comments: [{

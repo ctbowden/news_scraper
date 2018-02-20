@@ -14,7 +14,7 @@ var request = require("request");
 // Require all models
 var db = require("./models");
 
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3001;
 
 // Initialize Express
 var app = express();
@@ -30,14 +30,14 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Database Connection
-// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoScraper";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoScraper";
 // Set mongoose to use ES6 Promises
 mongoose.Promise = Promise;
 // Connect to Mongo
-mongoose.connect("mongodb://localhost/mongoScraper");
+mongoose.connect(MONGODB_URI);
 
 // Routes
-
+// Index Route
 app.get("/", function(req, res) {
   db.Article.find({})
   .then(function(dbArticle){
@@ -45,6 +45,20 @@ app.get("/", function(req, res) {
       articles: dbArticle
     };
     res.render("index", hbsObject);
+  })
+  .catch(function(err){
+    res.json(err);
+  })
+});
+
+// Saved Articles Route
+app.get("/saved", function(req, res) {
+  db.Article.find({})
+  .then(function(dbArticle){
+    var hbsObject = {
+      articles: dbArticle
+    };
+    res.render("saved", hbsObject);
   })
   .catch(function(err){
     res.json(err);
@@ -75,9 +89,36 @@ app.get('/scrape', function(req, res) {
       });
   
       // Eventually add a redirect
-      res.send("Scrape Complete");
+      res.redirect("/");
     });
   });
+
+// Route for grabing specific article by ID
+app.get("/articles/:id",function(req, res){
+  db.Article.findOne({ _id: req.params.id })
+  .populate("comment")
+  .then(function(dbArticle){
+    res.json(dbArticle);
+  })
+  .catch(function(err) {
+    res.json(err);
+  });
+});
+
+// Route for saving articles
+app.post("/articles/:id", function(req, res){
+  //
+  db.Comment.create(req.body)
+    .then(function(dbComment) {
+      return db.Article.findOneAndUpdate({_id: req.params.id}, { note: dbComment._id}, { new: true });
+
+    }).then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
 
 // Start the server
 app.listen(PORT, function() {
